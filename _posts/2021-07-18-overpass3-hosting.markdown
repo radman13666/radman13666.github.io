@@ -21,7 +21,7 @@ Overpass recently became a web-hosting company, after shifting from being a pass
 
 From the test, it was found there was sensitive information disclosed, despite it being encrypted. This information was used to compromise the web server and read targeted information i.e. the `web.flag`. The server was found to be running a local and misconfgured service that allowed the acquisition of the `user.flag` and further go ahead to obtain fully unlimited system privileges to read `root.flag` and take over the system.
 
-From the results of this test, it is recommended that Overpass focus on secure service configuration, strong and enforced password policy and proper backup and encryption strategies. This is greatly increase the defenses on the web server and reduce it's attack surface.
+From the results of this test, it is recommended that Overpass focus on secure service configuration, strong and enforced password policy and proper backup and encryption strategies. This will greatly increase the defenses on the web server and reduce it's attack surface.
 
 ## FINDINGS AND REMEDIATIONS
 
@@ -36,8 +36,8 @@ This section arranges the findings in order of decreasing severity, and the CVSS
 
 **Remediations**
 - remove sensitive information from being served by the web server.
-- keep encryption keys in a air-gapped system for safe keeping.
-- separate encryption keys from encryted data.
+- keep encryption keys in an air-gapped system for safe keeping.
+- separate encryption keys from encrypted data.
 
 ### Misconfigured NFS service = **BAD**
 
@@ -67,7 +67,7 @@ This section arranges the findings in order of decreasing severity, and the CVSS
 **Remediations**
 - remove unnecessary and privacy-infringing comments from production source code
 - ensure production source code kept under version control does not have private information
-- revise code quality assurance is focused on removing unnecessary and privacy-infringing comments.
+- revise code quality assurance, focusing on removing unnecessary and privacy-infringing comments.
 
 ### **GOOD** Findings
 - anonymous FTP access disabled
@@ -76,7 +76,7 @@ This section arranges the findings in order of decreasing severity, and the CVSS
 
 ## ATTACK NARRATIVE
 
-This section details the actions taken by the tester, in chronological order, in fully compromise the target system.
+This section details the actions taken by the tester, in chronological order, to fully compromise the target system.
 
 ### Scanning
 
@@ -152,7 +152,7 @@ Next, the acquired credentials from the web server backup file were used. This w
 
 From the attempts, the credentials of the `paradox` customer were successful.
 
-Searching the directories on the FTP service, it was discovered that the files present were identical to those found on the web page's HTML source code. The /backup directory discovered earlier was also found here.
+Searching the directories on the FTP service, it was discovered that the files present were identical to those found in the web page's HTML source code. The `/backup` directory discovered earlier was also found here.
 
 ![ftp directory listing](/assets/thm/overpass3-hosting/5-3.png)
 
@@ -194,7 +194,7 @@ Once received, the shell was stabilised using `python3`.
 
 ![stabilising reverse shell](/assets/thm/overpass3-hosting/6-4.png)
 
-From there, the target information (`web.flag`) was obtained using `find`. The web.flag was readable by the web server user, apache.
+From there, the target information (`web.flag`) was obtained using `find`. The `web.flag` was readable by the web server user; `apache`.
 
 ![finding web.flag](/assets/thm/overpass3-hosting/6-5.png)
 
