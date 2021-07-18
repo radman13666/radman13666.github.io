@@ -12,7 +12,7 @@ source "https://rubygems.org"
 gem "minima", "~> 2.5"
 gem "nokogiri", ">= 1.11.4"
 gem "addressable", ">= 2.8.0"
-gem 'jekyll-theme-hacker', '~> 0.1.2'
+#gem 'jekyll-theme-hacker', '~> 0.1.2'
 #gem "jekyll-theme-hacker"
 # If you want to use GitHub Pages, remove the "gem "jekyll"" above and
 # uncomment the line below. To upgrade, run `bundle update github-pages`.

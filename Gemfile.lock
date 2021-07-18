@@ -272,7 +272,6 @@ DEPENDENCIES
   addressable (>= 2.8.0)
   github-pages (~> 214)
   jekyll-feed (~> 0.12)
-  jekyll-theme-hacker (~> 0.1.2)
   minima (~> 2.5)
   nokogiri (>= 1.11.4)
   tzinfo (~> 1.2)

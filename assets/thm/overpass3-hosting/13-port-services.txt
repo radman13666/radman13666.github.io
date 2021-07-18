@@ -1,0 +1,14 @@
+# Nmap 7.91 scan initiated Thu Jul 15 19:34:23 2021 as: nmap -vv -Pn -n -p 21,22,80 -sV -oN port-services.txt 10.10.131.187
+Nmap scan report for 10.10.131.187
+Host is up, received user-set (0.29s latency).
+Scanned at 2021-07-15 19:34:23 EAT for 10s
+
+PORT   STATE SERVICE REASON  VERSION
+21/tcp open  ftp     syn-ack vsftpd 3.0.3
+22/tcp open  ssh     syn-ack OpenSSH 8.0 (protocol 2.0)
+80/tcp open  http    syn-ack Apache httpd 2.4.37 ((centos))
+Service Info: OS: Unix
+
+Read data files from: /usr/bin/../share/nmap
+Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+# Nmap done at Thu Jul 15 19:34:33 2021 -- 1 IP address (1 host up) scanned in 10.02 seconds
