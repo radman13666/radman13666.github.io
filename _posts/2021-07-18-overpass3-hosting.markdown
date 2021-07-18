@@ -92,7 +92,7 @@ From the nmap scan, there were TCP (Transmission Control Protocol) ports 21, 22 
 
 ### Enumeration
 
-Since the SSH service requires a username and password or SSH key to log into the target machine (which are currently unknown), it was decided to instead enumerate the other two services for any vulnerabilities.
+Since the SSH service requires a username and password or SSH key to log into the target machine (which were then unknown), it was decided to instead enumerate the other two services for any vulnerabilities.
 
 #### Port 80
 
