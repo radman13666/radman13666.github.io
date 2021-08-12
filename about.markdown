@@ -28,7 +28,9 @@ Stay cool, stay you.
 
 [TryHackMe](https://tryhackme.com/p/radwolfsdragon)
 
-[HackTheBox](https://www.hackthebox.eu/profile/405471)
+[Hack The Box](https://www.hackthebox.eu/profile/405471)
+
+[Blue Team Labs Online](https://blueteamlabs.online/public/user/550702e39463856ec50526)
 
 ### Certifications
 
