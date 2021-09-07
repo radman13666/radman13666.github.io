@@ -35,3 +35,5 @@ Stay cool, stay you.
 ### Certifications
 
 [CompTIA Security+](https://www.credly.com/badges/4e4448ca-63de-4fc2-b00d-7382067ebbb4/public_url)
+
+[CompTIA Network+](https://www.credly.com/badges/074497ba-2d17-44dc-8eb8-18022d07a63b/public_url)
