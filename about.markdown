@@ -38,4 +38,6 @@ Stay cool, stay you.
 
 [CompTIA Network+](https://www.credly.com/badges/074497ba-2d17-44dc-8eb8-18022d07a63b/public_url)
 
-[eLearnSecurity JPT](https://verified.elearnsecurity.com/certificates/6d7e8c81-92aa-4bdc-b603-f3f59ee510fe)
+[eLearnSecurity Junior Penetration Tester](https://verified.elearnsecurity.com/certificates/6d7e8c81-92aa-4bdc-b603-f3f59ee510fe)
+
+[eLearnSecurity Certified Incident Responder](https://verified.elearnsecurity.com/certificates/8c11e2b5-aefe-4d21-877f-c6f1d9014141)
